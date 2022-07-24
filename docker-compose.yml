@@ -1,0 +1,27 @@
+version: '2'
+services:
+  puppet:
+    container_name: puppet
+    hostname: puppet
+    image: puppet/puppetserver
+    ports:
+      - 8140:8140
+    volumes:
+      - ./code:/etc/puppetlabs/code/
+    networks:
+      - puppet
+
+  agent:
+    container_name: puppet-agent-1
+    hostname: puppet-agent-1
+    build: .
+    image: puppet-agent
+    tty: true
+    links:
+      - puppet:puppet
+    networks:
+      - puppet
+    depends_on:
+      - puppet
+networks:
+  puppet:
